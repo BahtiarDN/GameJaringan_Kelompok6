@@ -4,8 +4,8 @@ using UnityEngine.UI;
 using TMPro;
 
 public class NetworkManagerUI : MonoBehaviour
-        {
-            [Header("UI References")]
+{
+    [Header("UI References")]
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
     [SerializeField] private TextMeshProUGUI statusText;
