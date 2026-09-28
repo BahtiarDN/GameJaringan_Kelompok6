@@ -10,44 +10,26 @@ public class PlayerController : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        // Memberi warna berbeda pada karakter milik sendiri agar mudah dikenali saat testing
-<<<<<<< HEAD
-        if (!IsOwner)
-=======
         if (IsOwner)
->>>>>>> Yar
         {
-            GetComponent<Renderer>().material.color = Color.blue; //Player Lokal: Biru
+            // Player Lokal: Biru
+            GetComponent<Renderer>().material.color = Color.blue; 
 
-            // Atur posisi spawn acak untuk player yang baru masuk
-<<<<<<< HEAD
+            // Atur posisi spawn acak untuk player yang baru masuk (3D)
             float randomX = Random.Range(-3f, 3f);
             float randomZ = Random.Range(-3f, 3f);
             transform.position = new Vector3(randomX, 0.5f, randomZ);
         }
-
-        if (!IsOwner)
-=======
-            float randomX = Random.Range(-5f, 5f);
-            float randomY = Random.Range(-5f, 5f);
-            transform.position = new Vector2(randomX, randomY);
-        }
         else
->>>>>>> Yar
         {
-            GetComponent<Renderer>().material.color = Color.red; //Player Lokal: merah
+            // Player Lain: Merah
+            GetComponent<Renderer>().material.color = Color.red; 
         }
     }
 
     private void Update()
     {
-        // KUNCI UTAMA MULTIPLAYER
-<<<<<<< HEAD
-        // Jalankan input & pergerakan HANYA jika objek ini milik pemain lokal (IsOwner)
-=======
         // Jalankan input & pergerakan HANYA jika objek ini milik pemain lokal
->>>>>>> Yar
-
         if (!IsOwner) return;
 
         HandleMovement();
@@ -55,15 +37,11 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleMovement()
     {
-        //Membaca input dari keyboard (WASD / arah panah)
+        // Membaca input dari keyboard (WASD / arah panah)
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-<<<<<<< HEAD
         Vector3 moveDirection = new Vector3(horizontal, 0f, vertical).normalized;
-=======
-        Vector2 moveDirection = new Vector2(horizontal, vertical).normalized;
->>>>>>> Yar
 
         if (moveDirection.magnitude >= 0.1f)
         {
@@ -71,4 +49,4 @@ public class PlayerController : NetworkBehaviour
             transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
         }
     }
-}
+}       
