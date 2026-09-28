@@ -188,7 +188,6 @@ MonoBehaviour:
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 5ef296b207bf8904f97da871215471a8, type: 2}
-      - {fileID: 11400000, guid: 5ef296b207bf8904f97da871215471a8, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -959,7 +958,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1292665774}
   m_CullTransparentMesh: 1
---- !u!1001 &1726662112
+--- !u!1001 &1509643602
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -968,16 +967,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1207932809220640278, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
+      propertyPath: m_InScenePlaced
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1207932809220640278, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 609277543
+      value: 1136001100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1207932809220640278, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1207932809220640278, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 2967347674
       objectReference: {fileID: 0}
     - target: {fileID: 2175559366671264808, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.004
+      value: -0.09
       objectReference: {fileID: 0}
     - target: {fileID: 2175559366671264808, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.212
+      value: -4.13
       objectReference: {fileID: 0}
     - target: {fileID: 2175559366671264808, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1021,7 +1032,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4175109673715796816, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
       propertyPath: m_Name
-      value: Plane 1
+      value: PlayerPrefabs
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316443450326581674, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
+      propertyPath: SyncPositionZ
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316443450326581674, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
+      propertyPath: SyncRotAngleZ
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8536149591586958693, guid: bc9bc8a27b6f8fb41ac54e648fbc043a, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1306,4 +1325,4 @@ SceneRoots:
   - {fileID: 1284387564}
   - {fileID: 354378372}
   - {fileID: 384637475}
-  - {fileID: 1726662112}
+  - {fileID: 1509643602}

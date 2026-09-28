@@ -17,8 +17,9 @@ public class Bullet : NetworkBehaviour
     private void Update()
     {
         // Gerakkan peluru maju setiap frame
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(Vector2.up * speed * Time.deltaTime);
     }
+
     private void OnTriggerEnter(Collider other)
     {
         // Hanya Server yang berhak memproses Hit Detection (Authoritative)
