@@ -147,6 +147,7 @@ public class PlayerController : NetworkBehaviour
         {
             isDead = true; // cegah dobel kalau dua peluru kena di frame yang sama
             RespawnManager.Instance.HandleDeath(OwnerClientId, score.Value, NetworkObject);
+            GameManager.Instance.CheckWinConditionOnPlayerDeath(OwnerClientId);
         }
     }
 
