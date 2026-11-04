@@ -22,24 +22,12 @@ app.get('/api/health', (req, res) => {
 app.post('/api/register', (req, res) => {
   res.status(501).json({ message: 'Endpoint /api/register belum diimplementasikan' });
 });
+
 app.post('/api/login', (req, res) => {
   res.status(501).json({ message: 'Endpoint /api/login belum diimplementasikan' });
 });
-app.post('/api/score/save', (req, res) => {
-  res.status(501).json({ message: 'Endpoint /api/score/save belum diimplementasikan' });
-});
-app.get('/api/leaderboard', (req, res) => {
-  res.status(501).json({ message: 'Endpoint /api/leaderboard belum diimplementasikan' });
-});
 
-app.listen(PORT, () => {
-  console.log('=================================');
-  console.log(' Server Game Backend Berjalan!');
-  console.log(` URL: http://localhost:${PORT}`);
-  console.log('=================================');
-});
-
-// --- ENDPOINT 1: SIMPAN SKOR PERTANDINGAN ---
+// --- ENDPOINT /api/score/save: SIMPAN SKOR PERTANDINGAN ---
 app.post('/api/score/save', (req, res) => {
   const { userId, score } = req.body;
 
@@ -63,7 +51,7 @@ app.post('/api/score/save', (req, res) => {
   });
 });
 
-// --- ENDPOINT 2: AMBIL SKOR TERTINGGI PEMAIN (PERSONAL HIGH SCORE) ---
+// --- ENDPOINT /api/score/highscore/:userId: AMBIL SKOR TERTINGGI PEMAIN (PERSONAL HIGH SCORE) ---
 app.get('/api/score/highscore/:userId', (req, res) => {
   const userId = req.params.userId;
   const sql = `SELECT MAX(score) AS highScore FROM scores WHERE user_id = ?`;
@@ -82,4 +70,11 @@ app.get('/api/score/highscore/:userId', (req, res) => {
       highScore: personalHighScore
     });
   });
+});
+
+app.listen(PORT, () => {
+  console.log('=================================');
+  console.log(' Server Game Backend Berjalan!');
+  console.log(` URL: http://localhost:${PORT}`);
+  console.log('=================================');
 });
