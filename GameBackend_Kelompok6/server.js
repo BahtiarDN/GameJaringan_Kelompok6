@@ -27,12 +27,44 @@ app.post('/api/login', (req, res) => {
   res.status(501).json({ message: 'Endpoint /api/login belum diimplementasikan' });
 });
 
+// ============================================================
+// KONEKSI DATABASE - LAZY & AMAN (REVISI)
+// ============================================================
+// STRUKTUR DIBALIKIN SEPENUH AWAL: TIDAK ADA require('./database')
+// di bagian atas file, jadi perilaku start server SAMA PERSIS dengan
+// semula - server PASTI start walau modul sqlite3 belum di-install
+// di komputer teman satu tim (mis. baru git pull).
+//
+// Fungsinya tetap ada & tetap hidup, tapi require database dilakukan
+// DI DALAM route-nya saja, dibungkus try/catch:
+// - Jika sqlite3 ditemukan  -> endpoint skor bekerja normal.
+// - Jika sqlite3 tidak ada  -> server TIDAK crash, hanya membalas
+//   pesan "Jalankan: npm install sqlite3" (500). Health check lain damai.
+let dbInstance = null;
+function getDb() {
+  if (dbInstance === null) {
+    dbInstance = require('./database'); // koneksi SQLite (lazily, pertama dipakai)
+  }
+  return dbInstance;
+}
+
 // --- ENDPOINT /api/score/save: SIMPAN SKOR PERTANDINGAN ---
 app.post('/api/score/save', (req, res) => {
   const { userId, score } = req.body;
 
   if (userId === undefined || score === undefined) {
   return res.status(400).json({ status: 'error', message: 'userId dan score wajib diisi!' });
+  }
+
+  let db;
+  try {
+    db = getDb();
+  } catch (err) {
+    console.error('Modul sqlite3 tidak tersedia:', err.message);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Database belum siap. Jalankan: npm install sqlite3 (di folder GameBackend_Kelompok6).'
+    });
   }
 
   const sql = `INSERT INTO scores (user_id, score) VALUES (?, ?)`;
@@ -54,6 +86,18 @@ app.post('/api/score/save', (req, res) => {
 // --- ENDPOINT /api/score/highscore/:userId: AMBIL SKOR TERTINGGI PEMAIN (PERSONAL HIGH SCORE) ---
 app.get('/api/score/highscore/:userId', (req, res) => {
   const userId = req.params.userId;
+
+  let db;
+  try {
+    db = getDb();
+  } catch (err) {
+    console.error('Modul sqlite3 tidak tersedia:', err.message);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Database belum siap. Jalankan: npm install sqlite3 (di folder GameBackend_Kelompok6).'
+    });
+  }
+
   const sql = `SELECT MAX(score) AS highScore FROM scores WHERE user_id = ?`;
   db.get(sql, [userId], (err, row) => {
     if (err) {
