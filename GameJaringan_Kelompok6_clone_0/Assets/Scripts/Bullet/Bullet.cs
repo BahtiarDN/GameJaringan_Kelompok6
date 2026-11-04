@@ -11,6 +11,10 @@ public class Bullet : NetworkBehaviour
     // Diisi server saat peluru dibuat, supaya tidak mengenai penembaknya sendiri
     [HideInInspector] public ulong shooterClientId;
 
+    // Diisi EnemyController saat enemy menembak, supaya peluru enemy
+    // tidak melukai enemy lain / dirinya sendiri
+    [HideInInspector] public EnemyController enemyShooter;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -28,6 +32,19 @@ public class Bullet : NetworkBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!IsServer) return;
+
+        // Peluru bisa melukai Enemy (checked dulu agar tidak fallback ke player)
+        if (other.TryGetComponent(out EnemyController enemy))
+        {
+            // Peluru berasal dari enemy tidak boleh melukai enemy (termasuk diri sendiri)
+            if (enemyShooter != null) return;
+            if (enemy.IsDead) return;
+
+            enemy.TakeDamage(damageAmount, shooterClientId); // skor diberikan otomatis saat enemy mati
+            DestroyBullet();
+            return;
+        }
+
         if (!other.TryGetComponent(out PlayerController target)) return;
 
         if (target.OwnerClientId == shooterClientId) return; // abaikan penembak

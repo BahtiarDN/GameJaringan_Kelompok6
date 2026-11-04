@@ -31,6 +31,10 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
     [SerializeField] private ParticleSystem muzzleFlashVFX;
+
+    [Header("SFX Settings")]
+    [SerializeField] private AudioClip shootSfx;
+    [SerializeField] private AudioClip deathSfx;
     private bool isDead;
 
     private void Update()
@@ -51,6 +55,17 @@ public class PlayerController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
+        // 0. FIX WARNING "NetworkVariable is written to, but doesn't know its
+        //    NetworkBehaviour yet": semua PENULISAN NetworkVariable dilakukan
+        //    DI SINI (sudah ter-spawn & terdaftar), BUKAN di Awake()/Start(),
+        //    dan BUKAN dari script lain tepat setelah SpawnAsPlayerObject().
+        //    Skor hasil respawn dipasang dari buffer RespawnManager (server).
+        if (IsServer && RespawnManager.Instance != null &&
+            RespawnManager.Instance.TryConsumePendingScore(OwnerClientId, out int savedScore))
+        {
+            score.Value = savedScore; // skor tidak hilang karena mati
+        }
 
         // 1. Mendaftarkan Event Listener (panggilan otomatis saat nilai berubah)
         health.OnValueChanged += OnHealthChanged;
@@ -146,6 +161,10 @@ public class PlayerController : NetworkBehaviour
         if (health.Value <= 0)
         {
             isDead = true; // cegah dobel kalau dua peluru kena di frame yang sama
+
+            // Putar SFX kematian di semua Client sebelum objek di-despawn
+            PlayDeathSfxClientRpc();
+
             RespawnManager.Instance.HandleDeath(OwnerClientId, score.Value, NetworkObject);
             GameManager.Instance.CheckWinConditionOnPlayerDeath(OwnerClientId);
         }
@@ -187,6 +206,21 @@ public class PlayerController : NetworkBehaviour
         {
             muzzleFlashVFX.Play();
         }
-        // Opsional: Tambahkan efek suara tembakan (AudioSource.PlayClipAtPoint)
+
+        // Putar SFX tembakan (Bullet.wav)
+        if (shootSfx != null && SfxManager.Instance != null)
+        {
+            SfxManager.Instance.PlayAtPoint(shootSfx, transform.position);
+        }
+    }
+
+    // CLIENT RPC: Putar SFX kematian player di semua Client
+    [ClientRpc]
+    private void PlayDeathSfxClientRpc()
+    {
+        if (deathSfx != null && SfxManager.Instance != null)
+        {
+            SfxManager.Instance.PlayAtPoint(deathSfx, transform.position);
+        }
     }
 }

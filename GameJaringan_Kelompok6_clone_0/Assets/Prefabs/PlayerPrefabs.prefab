@@ -586,6 +586,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2178964401211849970, guid: df488f73cd1bf364f8ce26815c37ab04, type: 3}
   firePoint: {fileID: 6286309658326018916}
   muzzleFlashVFX: {fileID: 0}
+  shootSfx: {fileID: 8300000, guid: 15c8726daef1d6544a7099ec56a52d1c, type: 3}
+  deathSfx: {fileID: 8300000, guid: 79c57407746b10145b0e78e8b1807ac9, type: 3}
 --- !u!60 &6434759425917988625
 PolygonCollider2D:
   m_ObjectHideFlags: 0
