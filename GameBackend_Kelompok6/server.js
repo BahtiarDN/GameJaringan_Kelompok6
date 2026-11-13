@@ -86,7 +86,6 @@ app.post('/api/score/save', (req, res) => {
 // --- ENDPOINT /api/score/highscore/:userId: AMBIL SKOR TERTINGGI PEMAIN (PERSONAL HIGH SCORE) ---
 app.get('/api/score/highscore/:userId', (req, res) => {
   const userId = req.params.userId;
-
   let db;
   try {
     db = getDb();
@@ -122,13 +121,21 @@ app.get('/api/score/highscore/:userId', (req, res) => {
 
 // --- ENDPOINT GET LEADERBOARD (TOP 10 HIGH SCORES) ---
 app.get('/api/leaderboard', (req, res) => {
+  let db;
+  try {
+    db = getDb();
+  } catch (err) {
+    console.error('Modul sqlite3 tidak tersedia:', err.message);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Database belum siap. Jalankan: npm install sqlite3 (di folder GameBackend_Kelompok6).'
+    });
+  }
+
   const sql = `
-    SELECT username, MAX(score) AS highScore
+    SELECT user_id AS userId, score
     FROM scores
-    JOIN users ON user_id = u.id
-    GROUP BY user_id
-    ORDER BY highScore DESC
-    LIMIT 10
+    ORDER BY score DESC, played_at DESC, id DESC
   `;
 
   db.all(sql, [], (err, rows) => {

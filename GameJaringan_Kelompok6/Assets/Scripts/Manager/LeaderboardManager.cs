@@ -66,7 +66,7 @@ public class LeaderboardManager : MonoBehaviour
             if (itemUI != null)
             {
                 int rank = i + 1;
-                itemUI.SetData(rank, entryList[i].username, entryList[i].highScore);
+                itemUI.SetData(rank, entryList[i].userId, entryList[i].score);
             }
         }
         Debug.Log($"[LeaderboardManager] Berhasil memuat {entryList.Count} data leaderboard.");

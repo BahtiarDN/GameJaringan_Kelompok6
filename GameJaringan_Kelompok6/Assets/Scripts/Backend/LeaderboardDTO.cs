@@ -3,8 +3,8 @@ using System.Collections.Generic;
 [Serializable]
 public class LeaderboardEntry
 {
-    public string username;
-    public int highScore;
+    public int userId;
+    public int score;
 }
 [Serializable]
 public class LeaderboardResponse
