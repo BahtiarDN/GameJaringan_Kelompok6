@@ -9,24 +9,6 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Game Backend Server is running successfully!',
-    serverTime: new Date().toISOString()
-  });
-});
-
-// Draft endpoint (diimplementasikan di pertemuan berikutnya)
-app.post('/api/register', (req, res) => {
-  res.status(501).json({ message: 'Endpoint /api/register belum diimplementasikan' });
-});
-
-app.post('/api/login', (req, res) => {
-  res.status(501).json({ message: 'Endpoint /api/login belum diimplementasikan' });
-});
-
 // ============================================================
 // KONEKSI DATABASE - LAZY & AMAN (REVISI)
 // ============================================================
@@ -47,6 +29,24 @@ function getDb() {
   }
   return dbInstance;
 }
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Game Backend Server is running successfully!',
+    serverTime: new Date().toISOString()
+  });
+});
+
+// Draft endpoint (diimplementasikan di pertemuan berikutnya)
+app.post('/api/register', (req, res) => {
+  res.status(501).json({ message: 'Endpoint /api/register belum diimplementasikan' });
+});
+
+app.post('/api/login', (req, res) => {
+  res.status(501).json({ message: 'Endpoint /api/login belum diimplementasikan' });
+});
 
 // --- ENDPOINT /api/score/save: SIMPAN SKOR PERTANDINGAN ---
 app.post('/api/score/save', (req, res) => {
@@ -98,7 +98,11 @@ app.get('/api/score/highscore/:userId', (req, res) => {
     });
   }
 
-  const sql = `SELECT MAX(score) AS highScore FROM scores WHERE user_id = ?`;
+  const sql = `
+    SELECT MAX(score) AS highScore 
+    FROM scores 
+    WHERE user_id = ?
+  `;
   db.get(sql, [userId], (err, row) => {
     if (err) {
     console.error('Gagal mengambil high score:', err.message);
@@ -112,6 +116,30 @@ app.get('/api/score/highscore/:userId', (req, res) => {
       status: 'success',
       userId: parseInt(userId),
       highScore: personalHighScore
+    });
+  });
+});
+
+// --- ENDPOINT GET LEADERBOARD (TOP 10 HIGH SCORES) ---
+app.get('/api/leaderboard', (req, res) => {
+  const sql = `
+    SELECT username, MAX(score) AS highScore
+    FROM scores
+    JOIN users ON user_id = u.id
+    GROUP BY user_id
+    ORDER BY highScore DESC
+    LIMIT 10
+  `;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error('Gagal mengambil leaderboard:', err.message);
+      return res.status(500).json({ status: 'error', message: 'Gagal mengambil data leaderboard.' });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: rows
     });
   });
 });
