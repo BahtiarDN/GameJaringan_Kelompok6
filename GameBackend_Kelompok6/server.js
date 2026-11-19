@@ -150,6 +150,7 @@ app.get('/api/leaderboard', (req, res) => {
   });
 });
 
+
 app.listen(PORT, () => {
   console.log('=================================');
   console.log(' Server Game Backend Berjalan!');
